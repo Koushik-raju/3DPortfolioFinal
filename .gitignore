@@ -1,0 +1,11 @@
+# local scratch copies
+UsersAdminDownloadskoushik-old/
+
+# tool metadata
+.freebuff/
+
+# logs
+*.log
+
+# deps
+node_modules/

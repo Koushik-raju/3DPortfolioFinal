@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#0f1020" />
+<title>Koushik Raju — Developer · Tester · Designer</title>
+<meta name="description" content="Koushik Raju - Developer, Tester, and Designer. Building thoughtful digital experiences." />
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+  <canvas id="scene" aria-label="Interactive 3D portfolio room"></canvas>
+  <div class="grain"></div>
+  <header class="topbar">
+    <a class="brand" href="#home"><span class="brand-mark">◈</span> <span>KOUSHIK RAJU<span class="muted">.DEV</span></span></a>
+    <div class="availability"><i></i> AVAILABLE FOR OPPORTUNITIES</div>
+    <button class="sound-toggle" id="soundToggle" aria-label="Toggle ambient sound"><span class="sound-bars"><i></i><i></i><i></i><i></i></span><span id="soundLabel">SOUND OFF</span></button>
+  </header>
+  <main>
+    <section class="hero-copy" id="home">
+      <p class="eyebrow"><span class="tiny-dot"></span> DEVELOPER · TESTER · DESIGNER</p>
+      <h1>I build<br><em>digital things</em><br>that work.</h1>
+      <p class="intro">Crafting intuitive experiences with clean code and attention to detail.</p>
+      <div class="hero-actions"><button class="primary" data-open="projects">VIEW PROJECTS <span>→</span></button><button class="text-btn" data-open="about">ABOUT <span>→</span></button></div>
+    </section>
+    <div class="scene-hint"><span class="mouse-icon">◉</span><span>DRAG TO LOOK AROUND<br><b>CLICK OBJECTS TO EXPLORE</b></span></div>
+    <div class="side-label">KARACHI, PAKISTAN <span>↘</span></div>
+    <div class="hotspot-label label-monitor">PROJECTS</div>
+    <div class="hotspot-label label-board">GAMES</div>
+    <div class="hotspot-label label-shelf">ABOUT</div>
+    <nav class="room-nav" aria-label="Portfolio sections">
+    <button data-open="projects">01 / PROJECTS</button>
+    <button data-open="about">02 / ABOUT</button>
+    <button data-open="games">03 / GAMES</button>
+    <button data-open="contact">04 / CONTACT</button>
+  </nav>
+    <section class="lower-intro"><span class="eyebrow">FOCUSED ON</span><h2>Pragmatic.<br><em>Precise.</em></h2><p>From frontend to testing, I care about the details that make products reliable and delightful.</p><button class="outline" data-open="contact">GET IN TOUCH <span>→</span></button></section>
+  </main>
+  <footer class="footer"><span>© 2026 KOUSHIK RAJU</span><span>BUILT WITH CURIOSITY</span><a href="mailto:koushikrajusr@gmail.com">SAY HELLO →</a></footer>
+  <div class="panel-backdrop" id="backdrop"></div>
+  <aside class="detail-panel" id="detailPanel" aria-live="polite" aria-hidden="true">
+    <button class="close-panel" id="closePanel" aria-label="Close panel">×</button>
+    <div class="panel-content" id="panelContent"></div>
+  </aside>
+  <div class="toast" id="toast">Drag to orbit · Click an object to open it</div>
+</div>
+<script type="module" src="main.js"></script>
+</body>
+</html>

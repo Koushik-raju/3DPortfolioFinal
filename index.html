@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Koushik Raju — Developer, Tester, Designer</title>
+    <meta
+      name="description"
+      content="Koushik Raju — developer and QA engineer. A 3D room you can look around: projects, experience, about and contact."
+    />
+    <meta name="theme-color" content="#0a0808" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Koushik Raju — Developer, Tester, Designer" />
+    <meta
+      property="og:description"
+      content="A 3D room portfolio: projects, experience, about and contact. Drag to look around."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three/three.module.js",
+          "three/addons/": "./vendor/three/addons/"
+        }
+      }
+    </script>
+  </head>
+  <body class="is-loading">
+    <canvas id="scene" aria-label="An interactive 3D room: Koushik's studio at dusk."></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <div class="loader" id="loader" role="status" aria-live="polite">
+      <div class="loader-inner">
+        <p class="loader-cmd"><span>$</span> npm run room</p>
+        <ol class="loader-log" id="loaderLog"></ol>
+        <div class="loader-bar"><i id="loaderFill"></i></div>
+        <div class="loader-meta">
+          <span id="loaderStatus">booting studio</span>
+          <span id="loaderPct">0%</span>
+        </div>
+      </div>
+      <p class="loader-foot"><span>Koushik Raju</span><span>Portfolio / 2026</span></p>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href="#home" data-home aria-label="Return to the room overview">
+        <span class="brand-mark">KR</span>
+        <span class="brand-text">
+          <b>Koushik Raju</b>
+          <span>Developer · Tester · Designer</span>
+        </span>
+      </a>
+      <div class="top-actions">
+        <span class="status"><i></i>Open to work</span>
+        <button class="sound-btn" id="soundBtn" type="button" aria-pressed="false">
+          <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="sound-text">Sound off</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="hero" id="hero">
+      <p class="eyebrow">
+        <span class="eyebrow-num">01</span>
+        <span class="eyebrow-rule"></span>
+        <span>The studio</span>
+      </p>
+      <h1 class="hero-name" aria-label="Koushik Raju">
+        <span class="hero-line" data-split>KOUSHIK</span>
+        <span class="hero-line hero-line--alt" data-split>Raju</span>
+      </h1>
+      <p class="hero-tagline">
+        I build digital things that work — and test them until they hold up.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn--amber" type="button" data-go="projects">
+          Explore the room <span aria-hidden="true">↗</span>
+        </button>
+        <button class="btn btn--ghost" type="button" data-go="about">About me</button>
+      </div>
+    </main>
+
+    <div class="drag-hint" id="dragHint" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="5" /><path d="M12 6v4" /></svg>
+      <span>Drag to look around</span>
+    </div>
+
+    <div class="markers" id="markers"></div>
+
+
+    <nav class="dock" aria-label="Sections">
+      <span class="dock-pill" id="dockPill" aria-hidden="true"></span>
+      <button type="button" data-go="projects"><span class="n">01</span><span class="l">Projects</span></button>
+      <button type="button" data-go="experience"><span class="n">02</span><span class="l">Experience</span></button>
+      <button type="button" data-go="about"><span class="n">03</span><span class="l">About</span></button>
+      <button type="button" data-go="contact"><span class="n">04</span><span class="l">Contact</span></button>
+    </nav>
+
+    <div class="object-nav" id="certNav" hidden>
+      <button type="button" data-cert-step="-1"><span aria-hidden="true">←</span> Previous</button>
+      <span class="object-nav__count" id="certCount">01 / 06</span>
+      <button type="button" data-cert-step="1">Next <span aria-hidden="true">→</span></button>
+    </div>
+
+    <div class="scrim" id="scrim" aria-hidden="true"></div>
+
+    <aside class="panel" id="panel" aria-hidden="true" aria-labelledby="panelTitle">
+      <div class="panel-head">
+        <span class="panel-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="panel-path" id="panelPath">~/portfolio</span>
+        <span class="panel-count" id="panelCount">01 / 04</span>
+        <button class="panel-close" id="panelClose" type="button" aria-label="Back to the room">
+          <span aria-hidden="true">←</span> <span class="close-label">Back to the room</span>
+        </button>
+      </div>
+      <div class="panel-scroll" id="panelScroll"></div>
+      <div class="panel-foot">
+        <span>Koushik Raju — portfolio 2026</span>
+        <span class="panel-hint">esc · back to the room</span>
+      </div>
+      <div class="screen-fx" aria-hidden="true"><i></i></div>
+    </aside>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <p class="flat-note" id="flatNote" hidden>
+      WebGL isn’t available here, so the room is shown as a still. Everything below still works — use the menu.
+    </p>
+
+    <noscript>
+      <div class="nojs">
+        <h1>Koushik Raju</h1>
+        <p>Developer · Tester · Designer. This portfolio needs JavaScript for the 3D room.</p>
+        <p><a href="Certification.html">Certifications</a> · <a href="mailto:koushikrajusr@gmail.com">koushikrajusr@gmail.com</a></p>
+      </div>
+    </noscript>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

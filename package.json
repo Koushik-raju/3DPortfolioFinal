@@ -1,0 +1,11 @@
+{
+  "name": "koushik-room-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A cinematic 3D room portfolio built with Three.js — no build step.",
+  "scripts": {
+    "start": "node serve.mjs",
+    "dev": "node serve.mjs"
+  }
+}
