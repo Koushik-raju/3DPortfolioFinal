@@ -446,6 +446,10 @@ a {
   color: rgba(243, 236, 227, 0.86);
 }
 
+.hero .btn--amber {
+  box-shadow: 0 18px 46px rgba(255, 46, 136, 0.36);
+}
+
 .hero .btn--amber:hover {
   background: rgba(255, 178, 122, 0.14);
   border-color: rgba(195, 154, 120, 0.62);
@@ -5563,8 +5567,9 @@ body.object-focus .hero {
    ========================================================================== */
 
 :root {
-  --accent: #b4461f;
-  --accent-lift: #c8511f;
+  --accent: #ff2e88;
+  --accent-lift: #ff5aa2;
+  --neon-cyan: #35e6ff;
 }
 
 .hero-name {
@@ -5625,7 +5630,16 @@ body.object-focus .hero {
 }
 
 .marker:hover {
-  border-color: rgba(180, 70, 31, 0.55);
+  border-color: rgba(255, 46, 136, 0.6);
+  box-shadow: 0 10px 30px rgba(255, 46, 136, 0.24);
+}
+
+.dock button.is-active .n {
+  text-shadow: 0 0 16px rgba(255, 46, 136, 0.85);
+}
+
+.hero-name em {
+  text-shadow: 0 0 52px rgba(255, 46, 136, 0.4);
 }
 
 /* The certificate wall is stepped through with this bar. It floats above the

@@ -40,8 +40,10 @@ function tube(parent, points, radius, mat, opts = {}) {
   return add(parent, geo, mat, [0, 0, 0], opts);
 }
 
-// every LED in the room runs off this one cold accent
-const ACCENT = 0x4fd6ea;
+// the rig: a cyan key, a magenta wash and one violet lamp, which is the
+// difference between "lit interior" and "somebody's actual setup"
+const NEON = { cyan: 0x35e6ff, magenta: 0xff2e88, violet: 0x9d5cff };
+const ACCENT = NEON.cyan;
 
 export function buildRoom(renderer) {
   const T = createTextures(renderer, experience);
@@ -225,9 +227,14 @@ export function buildRoom(renderer) {
   // warm lamps, which is what stops the interior reading as flat
   const stripMat = new THREE.MeshStandardMaterial({ color: 0xcaf7ff, emissive: ACCENT, emissiveIntensity: 2.4 });
   box(desk, 3.9, 0.012, 0.03, stripMat, [0, 1.27, 0.58]);
-  const stripLight = new THREE.PointLight(ACCENT, 1.8, 2.6, 2);
+  const stripLight = new THREE.PointLight(ACCENT, 3.2, 3, 2);
   stripLight.position.set(0, 1.2, 0.5);
   desk.add(stripLight);
+
+  // skirting glow behind the desk
+  box(desk, 3.6, 0.014, 0.03, new THREE.MeshStandardMaterial({ color: 0xffc2dc, emissive: NEON.magenta, emissiveIntensity: 2.6 }), [0, 0.09, -0.3]);
+  // cyan line on the desk apron, the edge the camera actually sees
+  box(desk, 3.7, 0.008, 0.014, new THREE.MeshStandardMaterial({ color: 0xcaf7ff, emissive: NEON.cyan, emissiveIntensity: 1.7 }), [0, 1.245, 0.685]);
 
   /* -------------------------------- monitors -------------------------------- */
 
@@ -271,9 +278,14 @@ export function buildRoom(renderer) {
     mon,
     2.6,
     1.7,
-    new THREE.MeshBasicMaterial({ map: T.glow, color: ACCENT, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending, depthWrite: false }),
+    new THREE.MeshBasicMaterial({ map: T.glow, color: NEON.magenta, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false }),
     [0, 2.4, -0.11],
   );
+
+  // magenta wash behind the panel
+  const neonBack = new THREE.PointLight(NEON.magenta, 3.4, 3.4, 2);
+  neonBack.position.set(0, 2.2, -0.42);
+  mon.add(neonBack);
 
   // webcam
   box(mon, 0.12, 0.035, 0.05, M.metal, [0, 2.96, 0.01], { r: 0.01 });
@@ -307,6 +319,9 @@ export function buildRoom(renderer) {
   // keyboard
   const keyboard = new THREE.Group();
   keyboard.position.set(-0.06, 1.4, 0.52);
+  const keyGlow = new THREE.PointLight(NEON.cyan, 1.1, 1.1, 2);
+  keyGlow.position.set(0, 0.02, 0.06);
+  keyboard.add(keyGlow);
   desk.add(keyboard);
   box(keyboard, 1.04, 0.034, 0.34, new THREE.MeshStandardMaterial({ color: 0x211d26, roughness: 0.6 }), [0, 0, 0], { r: 0.014, cast: true });
   const keyGeo = rounded(0.058, 0.014, 0.058, 0.006, 2);
@@ -478,7 +493,7 @@ export function buildRoom(renderer) {
   bookRow(-1.6, 0.45, shelfY[3]);
 
   // warm LED under the middle shelf, so the left side reads at night
-  const shelfStripMat = new THREE.MeshStandardMaterial({ color: 0xffc08a, emissive: 0xff9a4d, emissiveIntensity: 1.2 });
+  const shelfStripMat = new THREE.MeshStandardMaterial({ color: 0xd4b6ff, emissive: NEON.violet, emissiveIntensity: 2.2 });
   box(shelf, 3.0, 0.008, 0.022, shelfStripMat, [0, shelfY[2] - 0.038, 0.19]);
   const shelfGlow = new THREE.PointLight(0xffa863, 2.4, 2.8, 2);
   shelfGlow.position.set(-5.2, 1.72, -1.5);
@@ -912,7 +927,7 @@ export function buildRoom(renderer) {
   const fanMats = [];
   for (let i = 0; i < 3; i += 1) {
     const y = 0.66 - i * 0.19;
-    const mat = new THREE.MeshStandardMaterial({ color: 0x161c22, emissive: ACCENT, emissiveIntensity: 1.9, metalness: 0.6, roughness: 0.34 });
+    const mat = new THREE.MeshStandardMaterial({ color: 0x161022, emissive: NEON.cyan, emissiveIntensity: 2.2, metalness: 0.6, roughness: 0.34 });
     const fan = add(tower, new THREE.TorusGeometry(0.075, 0.008, 8, 28), mat, [0, y, 0.355]);
     const disc = add(tower, new THREE.CircleGeometry(0.07, 24), new THREE.MeshBasicMaterial({ color: 0x2a2136, transparent: true, opacity: 0.85 }), [0, y, 0.354]);
     fanMats.push(mat);
@@ -983,8 +998,8 @@ export function buildRoom(renderer) {
   // the sun coming through the window, with the shaded side falling away.
   // dusk: a cold sky and a warm floor bounce, kept low so the lamps and the
   // monitor carry the room instead of a flat interior light
-  scene.add(new THREE.HemisphereLight(0x7f95bd, 0x2a1f19, 0.2));
-  scene.add(new THREE.AmbientLight(0x8a97b4, 0.05));
+  scene.add(new THREE.HemisphereLight(0x7b6dd6, 0x241a2a, 0.24));
+  scene.add(new THREE.AmbientLight(0x7a6ade, 0.07));
 
   // The sun is placed so its direction runs clean through the window opening
   // and lands on the floor in front of the desk. Its previous angle cleared
@@ -1017,7 +1032,7 @@ export function buildRoom(renderer) {
   fill.target.position.set(0.5, 1.6, -2);
   scene.add(fill, fill.target);
 
-  const pendantLight = new THREE.SpotLight(0xffb070, 13, 9, 0.95, 0.9, 1.7);
+  const pendantLight = new THREE.SpotLight(0xffb070, 8, 9, 0.95, 0.9, 1.7);
   pendantLight.position.set(1.55, 3.3, -2.5);
   pendantLight.target.position.set(0.4, 0.2, -2.3);
   pendantLight.castShadow = true;
@@ -1025,6 +1040,16 @@ export function buildRoom(renderer) {
   pendantLight.shadow.bias = -0.001;
   pendantLight.shadow.normalBias = 0.02;
   scene.add(pendantLight, pendantLight.target);
+
+  const washMagenta = new THREE.SpotLight(NEON.magenta, 22, 8, 1.15, 1, 1.6);
+  washMagenta.position.set(0.3, 1.05, -3.1);
+  washMagenta.target.position.set(0.3, 3.6, -5.4);
+  scene.add(washMagenta, washMagenta.target);
+
+  const washCyan = new THREE.SpotLight(NEON.cyan, 20, 8, 1.1, 1, 1.6);
+  washCyan.position.set(-3.3, 1.2, -3.0);
+  washCyan.target.position.set(-3.9, 2.9, -5.3);
+  scene.add(washCyan, washCyan.target);
 
   const monitorLight = new THREE.PointLight(ACCENT, 4.2, 3.6, 2);
   monitorLight.position.set(-0.5, 2.3, -3.3);

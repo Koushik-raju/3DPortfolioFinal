@@ -629,9 +629,13 @@ function drawHomeScreen(g, W, H, t) {
   g.fillStyle = '#f4f9ff';
   g.font = `500 128px ${SANS}`;
   g.fillText('PORTFOLIO', 60, 300);
-  g.fillStyle = '#5fd6ea';
+  g.fillStyle = '#ff2e88';
   g.font = `italic 400 128px ${SERIF}`;
   g.fillText('2026', 60, 424);
+  g.shadowColor = 'rgba(255,46,136,.55)';
+  g.shadowBlur = 42;
+  g.fillText('2026', 60, 424);
+  g.shadowBlur = 0;
 
   g.fillStyle = 'rgba(214,236,248,.5)';
   g.font = `400 30px ${MONO}`;
