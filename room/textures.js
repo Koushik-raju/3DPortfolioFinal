@@ -586,192 +586,77 @@ function pegboardCanvas() {
 /* --------------------------------- screens --------------------------------- */
 
 function drawHomeScreen(g, W, H, t) {
-  g.fillStyle = '#0e0c11';
+  g.fillStyle = '#0b0f15';
   g.fillRect(0, 0, W, H);
-  const glow = g.createRadialGradient(W * 0.2, H * 0.1, 20, W * 0.2, H * 0.1, W * 0.75);
-  glow.addColorStop(0, 'rgba(255,146,84,.13)');
-  glow.addColorStop(1, 'rgba(255,146,84,0)');
+  const glow = g.createRadialGradient(W * 0.26, H * 0.08, 30, W * 0.26, H * 0.08, W * 0.8);
+  glow.addColorStop(0, 'rgba(79,214,234,.16)');
+  glow.addColorStop(1, 'rgba(79,214,234,0)');
   g.fillStyle = glow;
   g.fillRect(0, 0, W, H);
 
-  // wallpaper grid
-  g.strokeStyle = 'rgba(255,255,255,.022)';
+  // hairline grid, kept barely visible so it reads as texture, not lines
+  g.strokeStyle = 'rgba(180,220,240,.045)';
   g.lineWidth = 1;
-  for (let x = 0; x < W; x += 64) {
+  for (let x = 0; x < W; x += 80) {
     g.beginPath();
     g.moveTo(x, 0);
     g.lineTo(x, H);
     g.stroke();
   }
-  for (let y = 0; y < H; y += 64) {
+  for (let y = 0; y < H; y += 80) {
     g.beginPath();
     g.moveTo(0, y);
     g.lineTo(W, y);
     g.stroke();
   }
 
-  // top bar
-  g.fillStyle = 'rgba(12,10,14,.86)';
-  g.fillRect(0, 0, W, 46);
-  g.fillStyle = '#ff9d72';
-  g.beginPath();
-  g.arc(28, 23, 5, 0, Math.PI * 2);
-  g.fill();
-  g.fillStyle = 'rgba(255,255,255,.08)';
-  g.beginPath();
-  g.arc(48, 23, 5, 0, Math.PI * 2);
-  g.fill();
-  g.beginPath();
-  g.arc(68, 23, 5, 0, Math.PI * 2);
-  g.fill();
-  g.fillStyle = 'rgba(240,232,221,.5)';
-  g.font = `400 15px ${MONO}`;
-  g.fillText('koushik@studio  ~/portfolio', 100, 29);
   const now = new Date();
+  const clock = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+  // header: three marks that survive being 300px wide on screen
+  g.fillStyle = 'rgba(214,236,248,.55)';
+  g.font = `500 26px ${MONO}`;
+  g.fillText('PORTFOLIO', 64, 82);
   g.textAlign = 'right';
-  g.fillStyle = 'rgba(240,232,221,.62)';
-  g.fillText(`${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`, W - 26, 29);
+  g.fillStyle = 'rgba(214,236,248,.4)';
+  g.fillText(clock, W - 64, 82);
   g.textAlign = 'left';
+  g.fillStyle = 'rgba(140,210,235,.5)';
+  g.fillRect(64, 104, W - 128, 2);
 
-  // dock
-  g.fillStyle = 'rgba(18,15,21,.7)';
-  roundRect(g, 16, 64, 54, 470, 14);
-  g.fill();
-  for (let i = 0; i < 5; i += 1) {
-    g.fillStyle = i === 0 ? '#ff9d72' : 'rgba(240,232,221,.22)';
-    roundRect(g, 30, 82 + i * 58, 26, 26, 7);
-    g.fill();
-  }
+  // the name belongs to the room, not to the screen; the monitor carries the
+  // year and the index so it never repeats the hero
+  g.fillStyle = '#f4f9ff';
+  g.font = `500 128px ${SANS}`;
+  g.fillText('PORTFOLIO', 60, 300);
+  g.fillStyle = '#5fd6ea';
+  g.font = `italic 400 128px ${SERIF}`;
+  g.fillText('2026', 60, 424);
 
-  // editor window
-  const ex = 88;
-  const ey = 66;
-  const ew = 742;
-  const eh = 442;
-  g.fillStyle = 'rgba(20,17,24,.96)';
-  roundRect(g, ex, ey, ew, eh, 12);
-  g.fill();
-  g.strokeStyle = 'rgba(255,255,255,.07)';
-  g.lineWidth = 1;
-  g.stroke();
-  g.fillStyle = 'rgba(255,255,255,.035)';
-  roundRect(g, ex, ey, ew, 38, 12);
-  g.fill();
-  g.fillStyle = '#ffb27a';
-  g.font = `400 14px ${MONO}`;
-  g.fillText('portfolio.ts', ex + 20, ey + 25);
-  g.fillStyle = 'rgba(240,232,221,.3)';
-  g.fillText('room.ts', ex + 140, ey + 25);
-  g.fillText('about.md', ex + 220, ey + 25);
+  g.fillStyle = 'rgba(214,236,248,.5)';
+  g.font = `400 30px ${MONO}`;
+  g.fillText('DEVELOPER  ·  TESTER  ·  DESIGNER', 64, 492);
 
-  const lines = [
-    [['const ', '#ff9d72'], ['studio', '#f2e8da'], [' = {', 'rgba(240,232,221,.55)']],
-    [['  name: ', '#b9a7c9'], ["'Koushik Raju',", '#a9c3a0']],
-    [['  role: ', '#b9a7c9'], ["'Developer · Tester',", '#a9c3a0']],
-    [['  stack: ', '#b9a7c9'], ["['React', 'Java', 'MySQL'],", '#a9c3a0']],
-    [['  ships: ', '#b9a7c9'], ['true,', '#e0b287']],
-    [['}', 'rgba(240,232,221,.55)']],
-    [],
-    [['// the part most people skip', 'rgba(240,232,221,.28)']],
-    [['function ', '#ff9d72'], ['ship', '#e3c0ff'], ['(idea) {', 'rgba(240,232,221,.55)']],
-    [['  const ', '#ff9d72'], ['spec', '#f2e8da'], [' = plan(idea)', 'rgba(240,232,221,.6)']],
-    [['  return ', '#ff9d72'], ['test', '#e3c0ff'], ['(build(spec))', 'rgba(240,232,221,.6)']],
-    [['}', 'rgba(240,232,221,.55)']],
-  ];
-  let ly = ey + 86;
-  lines.forEach((segments, index) => {
-    g.fillStyle = 'rgba(240,232,221,.18)';
-    g.font = `400 14px ${MONO}`;
-    g.fillText(String(index + 1).padStart(2, '0'), ex + 16, ly);
-    let lx = ex + 48;
-    segments.forEach(([text, color]) => {
-      g.fillStyle = color;
-      g.font = `400 16px ${MONO}`;
-      g.fillText(text, lx, ly);
-      lx += g.measureText(text).width;
-    });
-    ly += 28;
-  });
-
-  // caret
-  if (Math.sin(t * 3.4) > -0.2) {
-    g.fillStyle = '#ffb27a';
-    g.fillRect(ex + 48, ly - 22, 2, 18);
-  }
-
-  // terminal
-  const ty = 524;
-  g.fillStyle = 'rgba(14,12,17,.96)';
-  roundRect(g, ex, ty, ew, 160, 12);
-  g.fill();
-  g.strokeStyle = 'rgba(255,255,255,.07)';
-  g.stroke();
-  g.fillStyle = 'rgba(240,232,221,.4)';
-  g.font = `400 14px ${MONO}`;
-  g.fillText('terminal — zsh', ex + 20, ty + 26);
-  g.fillStyle = '#ff9d72';
-  g.fillText('$', ex + 20, ty + 62);
-  g.fillStyle = '#f2e8da';
-  g.fillText('npm run studio', ex + 40, ty + 62);
-  g.fillStyle = 'rgba(240,232,221,.6)';
-  g.fillText('✓ room compiled     ✓ 4 sections wired', ex + 20, ty + 92);
-  g.fillStyle = '#a9c3a0';
-  g.fillText('● open to work — koushikrajusr@gmail.com', ex + 20, ty + 120);
-  g.fillStyle = 'rgba(240,232,221,.3)';
-  g.fillText('quality is a feature, not a phase', ex + 20, ty + 146);
-
-  // sidebar
-  const sx = 854;
-  const sw = 398;
-  g.fillStyle = 'rgba(20,17,24,.96)';
-  roundRect(g, sx, 66, sw, 618, 12);
-  g.fill();
-  g.strokeStyle = 'rgba(255,255,255,.07)';
-  g.stroke();
-  g.fillStyle = '#ffb27a';
-  g.font = `500 13px ${MONO}`;
-  g.fillText('N O W', sx + 24, 104);
+  // index, four rows with big numerals
   const rows = [
-    ['role', 'QA @ EXAR'],
-    ['building', 'this room'],
-    ['learning', 'Three.js'],
-    ['reading', 'a stack of books'],
-    ['after 7pm', 'skating'],
+    ['01', 'PROJECTS'],
+    ['02', 'EXPERIENCE'],
+    ['03', 'ABOUT'],
+    ['04', 'CONTACT'],
   ];
-  let ry = 146;
-  rows.forEach(([k, v]) => {
-    g.fillStyle = 'rgba(240,232,221,.32)';
-    g.font = `400 13px ${MONO}`;
-    g.fillText(k, sx + 24, ry);
-    g.fillStyle = '#f2e8da';
-    g.font = `400 16px ${SANS}`;
-    g.fillText(v, sx + 116, ry);
-    g.strokeStyle = 'rgba(255,255,255,.05)';
-    g.beginPath();
-    g.moveTo(sx + 24, ry + 18);
-    g.lineTo(sx + sw - 24, ry + 18);
-    g.stroke();
-    ry += 56;
+  let y = 566;
+  rows.forEach(([num, label]) => {
+    g.fillStyle = 'rgba(95,214,234,.85)';
+    g.font = `500 30px ${MONO}`;
+    g.fillText(num, 64, y);
+    g.fillStyle = 'rgba(240,247,255,.86)';
+    g.font = `400 34px ${MONO}`;
+    g.fillText(label, 140, y);
+    g.fillStyle = 'rgba(160,205,230,.16)';
+    g.fillRect(64, y + 16, W - 128, 1);
+    y += 46;
   });
-
-  // equaliser
-  g.fillStyle = 'rgba(255,178,122,.75)';
-  for (let i = 0; i < 26; i += 1) {
-    const h = 8 + Math.abs(Math.sin(t * 1.6 + i * 0.6)) * 42;
-    g.fillRect(sx + 24 + i * 13, 470 - h, 5, h);
-  }
-  g.fillStyle = 'rgba(240,232,221,.28)';
-  g.font = `400 13px ${MONO}`;
-  g.fillText('ambient · room tone', sx + 24, 500);
-  g.fillStyle = 'rgba(255,178,122,.9)';
-  g.font = `400 42px ${SERIF}`;
-  g.fillText('make it', sx + 24, 576);
-  g.fillText('hold up.', sx + 24, 622);
-  g.fillStyle = 'rgba(240,232,221,.34)';
-  g.font = `400 13px ${MONO}`;
-  g.fillText('PORTFOLIO  /  2026', sx + 24, 660);
 }
-
 function drawProjectsScreen(g, W, H, t) {
   g.fillStyle = '#0e0c11';
   g.fillRect(0, 0, W, H);
@@ -1231,82 +1116,17 @@ export function createTextures(renderer, experienceList = []) {
   // main monitor: live canvas
   // Draw the live monitor at 0.75 scale: the card is a metre away at most, so
   // the smaller upload is invisible but much cheaper to re-send to the GPU.
-  const [screenCanvas, sg] = makeCanvas(960, 540);
+  const [screenCanvas, sg] = makeCanvas(1280, 720);
   const screenTexture = toTexture(screenCanvas, aniso);
   const screen = {
     mode: 'home',
     draw(t) {
-      sg.setTransform(0.75, 0, 0, 0.75, 0, 0);
+      sg.setTransform(1, 0, 0, 1, 0, 0);
       if (this.mode === 'projects') drawProjectsScreen(sg, 1280, 720, t);
       else drawHomeScreen(sg, 1280, 720, t);
       screenTexture.needsUpdate = true;
     },
   };
-
-  // secondary monitor: a bold status panel. It reads at roughly 120 px wide
-  // from across the room, so it carries a few very large marks instead of the
-  // dense little interface that collapsed into noise and looked broken.
-  const [miniCanvas, mg] = makeCanvas(640, 960);
-  const miniTexture = toTexture(miniCanvas, aniso);
-  const drawMini = () => {
-    mg.fillStyle = '#0d0b10';
-    mg.fillRect(0, 0, 640, 960);
-    const g2 = mg.createLinearGradient(0, 0, 0, 960);
-    g2.addColorStop(0, 'rgba(255,146,84,.18)');
-    g2.addColorStop(0.5, 'rgba(255,146,84,0)');
-    mg.fillStyle = g2;
-    mg.fillRect(0, 0, 640, 960);
-
-    mg.fillStyle = 'rgba(240,232,221,.45)';
-    mg.font = `400 30px ${MONO}`;
-    mg.fillText('SYSTEM CHECK', 44, 92);
-    mg.textAlign = 'right';
-    mg.fillStyle = 'rgba(255,178,122,.8)';
-    mg.font = `400 26px ${MONO}`;
-    mg.fillText('LIVE', 548, 92);
-    mg.textAlign = 'left';
-    mg.fillStyle = '#ffb27a';
-    mg.beginPath();
-    mg.arc(568, 82, 7, 0, Math.PI * 2);
-    mg.fill();
-
-    mg.fillStyle = 'rgba(255,255,255,.08)';
-    mg.fillRect(44, 128, 552, 2);
-
-    mg.fillStyle = '#f2e8da';
-    mg.font = `500 148px ${SANS}`;
-    mg.fillText('ALL', 40, 300);
-    mg.fillStyle = '#ffb27a';
-    mg.fillText('GOOD', 40, 442);
-
-    mg.fillStyle = 'rgba(240,232,221,.55)';
-    mg.font = `400 34px ${MONO}`;
-    mg.fillText('open to work', 44, 528);
-
-    mg.fillStyle = 'rgba(255,255,255,.08)';
-    mg.fillRect(44, 570, 552, 2);
-
-    const rows = [
-      ['Interface', 0.92],
-      ['Frontend', 0.86],
-      ['Testing', 0.9],
-    ];
-    let y = 664;
-    rows.forEach(([label, value]) => {
-      mg.fillStyle = 'rgba(240,232,221,.6)';
-      mg.font = `400 38px ${MONO}`;
-      mg.fillText(label, 44, y);
-      mg.fillStyle = 'rgba(255,255,255,.1)';
-      mg.fillRect(44, y + 26, 552, 18);
-      mg.fillStyle = '#ffb27a';
-      mg.fillRect(44, y + 26, 552 * value, 18);
-      y += 94;
-    });
-
-    miniTexture.needsUpdate = true;
-  };
-  drawMini();
-  redraws.push(drawMini);
 
   // laptop screen: Contact is read on this display, so it holds a clean card
   // rather than a wall of tiny editor text that turned to noise at distance.
@@ -1333,11 +1153,11 @@ export function createTextures(renderer, experienceList = []) {
     lg.fillRect(56, 102, 912, 1);
 
     lg.fillStyle = '#f2e8da';
-    lg.font = `500 88px ${SANS}`;
-    lg.fillText('Koushik', 56, 250);
+    lg.font = `500 96px ${SANS}`;
+    lg.fillText('Say hello', 56, 268);
     lg.fillStyle = '#c39a78';
-    lg.font = `italic 400 88px ${SERIF}`;
-    lg.fillText('Raju', 56, 352);
+    lg.font = `400 26px ${MONO}`;
+    lg.fillText('MAIL  ·  GITHUB  ·  LINKEDIN', 56, 330);
 
     lg.fillStyle = 'rgba(240,232,221,.55)';
     lg.font = `400 24px ${MONO}`;
@@ -1431,7 +1251,6 @@ export function createTextures(renderer, experienceList = []) {
     certs,
     screen,
     screenTexture,
-    miniTexture,
     laptopTexture,
     cards,
     pegboard,

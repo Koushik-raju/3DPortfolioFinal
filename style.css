@@ -158,10 +158,15 @@ a {
   background: rgba(255, 178, 122, 0.07);
 }
 
+/* The name is said once, at full size, by the hero. The masthead keeps only
+   the monogram; the text stays in the DOM for screen readers. */
 .brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .brand-text b {

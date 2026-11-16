@@ -118,7 +118,6 @@ export function buildRoom(renderer) {
       side: THREE.DoubleSide,
     }),
     screen: new THREE.MeshBasicMaterial({ map: T.screenTexture, toneMapped: false }),
-    miniScreen: new THREE.MeshBasicMaterial({ map: T.miniTexture, toneMapped: false }),
     laptopScreen: new THREE.MeshBasicMaterial({ map: T.laptopTexture, toneMapped: false }),
   };
 
@@ -280,15 +279,8 @@ export function buildRoom(renderer) {
   box(mon, 0.12, 0.035, 0.05, M.metal, [0, 2.96, 0.01], { r: 0.01 });
   cyl(mon, 0.014, 0.014, 0.02, new THREE.MeshStandardMaterial({ color: 0x05050a, metalness: 0.5, roughness: 0.2 }), [0, 2.96, 0.042], { rot: [Math.PI / 2, 0, 0] });
 
-  // vertical second monitor
-  const side = new THREE.Group();
-  side.position.set(-1.78, 0, -0.1);
-  side.rotation.y = 0.33;
-  desk.add(side);
-  box(side, 0.68, 1.08, 0.05, M.metal, [0, 2.52, 0], { r: 0.015, cast: true });
-  plane(side, 0.62, 1.0, M.miniScreen, [0, 2.52, 0.028]);
-  box(side, 0.08, 0.57, 0.07, M.metal, [0, 1.695, -0.02], { cast: true });
-  box(side, 0.44, 0.02, 0.24, M.metal, [0, 1.4, 0.04], { r: 0.01, cast: true });
+  // The vertical second monitor is gone: nothing was ever projected onto it,
+  // so it only read as a bright rectangle cluttering the left of the desk.
 
   // laptop
   const laptop = new THREE.Group();
