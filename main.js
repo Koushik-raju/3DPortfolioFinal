@@ -30,19 +30,12 @@ const finePointer = window.matchMedia('(pointer: fine)').matches;
 const isCompact = () =>
   window.matchMedia('(max-width: 1100px) and (orientation: portrait), (max-width: 820px)').matches;
 
-// The render ceiling is 4K (3840 x 2160), but resolution is adaptive: start
-// modest, climb toward 4K only while frames are cheap, back off when they are
-// not. A fixed 4K buffer made the room unusable on ordinary GPUs.
+// Resolution stays near native: anything past ~1.5x is supersampling, which
+// multiplies fill cost on the integrated GPUs most visitors have and buys very
+// little at these viewing distances. The old 4K ceiling made the room unusable.
 const maxRenderRatio = () =>
-  Math.max(
-    1,
-    Math.min(
-      isCompact() ? 2 : 4,
-      3840 / Math.max(1, window.innerWidth),
-      2160 / Math.max(1, window.innerHeight),
-    ),
-  );
-// Start at native pixel density: smooth first, then supersample upward.
+  Math.max(1, Math.min(isCompact() ? 1.25 : 1.5, (window.devicePixelRatio || 1) + 0.25));
+// Start at native pixel density: smooth first, then supersample a little.
 const startRenderRatio = () => Math.min(maxRenderRatio(), 1);
 let resRatio = 0;
 
@@ -54,7 +47,7 @@ function applyResolution(next) {
   if (composer) {
     composer.setPixelRatio(resRatio);
     composer.setSize(window.innerWidth, window.innerHeight);
-    if (bloom && !lowFx) bloom.setSize(window.innerWidth * 0.5, window.innerHeight * 0.5);
+    if (bloom && !lowFx) bloom.setSize(window.innerWidth * 0.42, window.innerHeight * 0.42);
   }
 }
 
@@ -1215,12 +1208,19 @@ function init3D() {
   try {
     renderer = new THREE.WebGLRenderer({
       canvas: els.canvas,
-      antialias: true,
+      // the scene is drawn into the composer's own target, so multisampling on
+      // the canvas never shows; it only costs memory bandwidth
+      antialias: false,
       powerPreference: 'high-performance',
     });
   } catch {
     return false;
   }
+
+  // Integrated and software GPUs cannot carry the bloom pass and ten lights at
+  // a usable frame rate: skip the composer for them from the first frame
+  // instead of waiting for the adaptive loop to notice.
+  if (weakGpu(renderer)) useLowFx();
 
   applyResolution(startRenderRatio());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -1245,16 +1245,18 @@ function init3D() {
   scene.add(room.scene);
   alignViewsToScreens();
 
-  composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-  bloom = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth * 0.5, window.innerHeight * 0.5),
-    isCompact() ? 0.18 : 0.22,
-    0.62,
-    0.94,
-  );
-  composer.addPass(bloom);
-  composer.addPass(new OutputPass());
+  if (!lowFx) {
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    bloom = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth * 0.42, window.innerHeight * 0.42),
+      isCompact() ? 0.18 : 0.22,
+      0.62,
+      0.94,
+    );
+    composer.addPass(bloom);
+    composer.addPass(new OutputPass());
+  }
 
   raycaster = new THREE.Raycaster();
   window.__room = room;
@@ -1566,42 +1568,56 @@ function wireUI() {
   document.fonts?.ready.then(updateDock);
 }
 
+function weakGpu(renderer) {
+  try {
+    const gl = renderer.getContext();
+    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    const name = String(ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : '');
+    return /intel|uhd graphics|hd graphics|swiftshader|llvmpipe|mali|adreno|powervr/i.test(name);
+  } catch {
+    return false;
+  }
+}
+
 function useLowFx() {
   if (lowFx) return;
   lowFx = true;
   document.body.classList.add('is-lowfx');
-  // Drop the bloom pass, not the resolution: the user asked for a 4K-crisp
-  // room, and softness is more noticeable than a missing glow.
+  // Drop the bloom pass before the resolution: softness is more noticeable
+  // than a missing glow.
   if (bloom) bloom.enabled = false;
+  if (composer) composer = null;
 }
 
 function frame() {
   requestAnimationFrame(frame);
-  if (!renderer || !composer || !camera) return;
+  if (!renderer || !camera) return;
   const dt = Math.min(clock.getDelta(), 0.05);
   const t = clock.elapsedTime;
 
   room.update(t, dt);
   updateCamera(dt, t);
   updateSurface();
-  if (lowFx) renderer.render(scene, camera);
-  else composer.render();
+  if (composer) composer.render();
+  else renderer.render(scene, camera);
 
   // Dynamic resolution. Resolution is shed before effects, and only once it
   // is at native does the bloom pass go; it climbs again when frames are fast.
   if (document.visibilityState === 'visible') {
     perfAcc += Math.min(dt, 0.1);
     perfFrames += 1;
-    if (perfFrames >= 40) {
+    if (perfFrames >= 30) {
       const avg = perfAcc / perfFrames;
-      if (avg > 0.027) {
-        if (resRatio > 1.0) applyResolution(resRatio - 0.15);
+      // back off quickly (each step reallocates the composer targets), climb
+      // only when frames are comfortably fast
+      if (avg > 0.026) {
+        if (resRatio > 1.0) applyResolution(resRatio - 0.2);
         else if (!lowFx) useLowFx();
-        else applyResolution(resRatio - 0.1);
-      } else if (avg > 0.0185) {
+        else applyResolution(resRatio - 0.15);
+      } else if (avg > 0.019) {
         if (resRatio > 1.0) applyResolution(resRatio - 0.1);
         else if (!lowFx) useLowFx();
-      } else if (!lowFx && avg < 0.0135 && resRatio < maxRenderRatio() - 0.01) {
+      } else if (!lowFx && avg < 0.0125 && resRatio < maxRenderRatio() - 0.01) {
         applyResolution(resRatio + 0.1);
       }
       perfAcc = 0;

@@ -579,7 +579,7 @@ body.panel-open .markers {
   border: 1px solid var(--line);
   border-radius: 999px;
   background: rgba(13, 11, 11, 0.58);
-  backdrop-filter: blur(22px) saturate(1.35);
+  backdrop-filter: blur(14px) saturate(1.25);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
 }
 
@@ -4636,6 +4636,18 @@ body.panel-open .panel.is-inspector {
 /* A lighter render path, switched on when the first minute of frames is slow. */
 body.is-lowfx .grain {
   display: none;
+}
+
+/* A backdrop blur sitting over a live 3D canvas is re-composited every frame,
+   and on the GPUs that already skip bloom it is the expensive part of the
+   frame. The glass surfaces keep their tint, they just stop sampling behind. */
+body.is-lowfx * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.is-lowfx .scrim {
+  background: rgba(4, 3, 3, 0.5);
 }
 
 body.is-lowfx .hero::before {

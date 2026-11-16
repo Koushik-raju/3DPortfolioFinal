@@ -969,9 +969,9 @@ export function buildRoom(renderer) {
   sun.position.copy(sunThrough).addScaledVector(sunDir, -13);
   sun.target.position.copy(sunAim);
   sun.castShadow = true;
-  // A denser shadow map over just the sunlit bay, so the window's mullions and
-  // sill read as crisp bars in the patch instead of smearing away.
-  sun.shadow.mapSize.set(3072, 3072);
+  // The sunlit bay gets its own shadow map so the mullions and sill read as
+  // bars in the patch; 2048 keeps them crisp without a 36 MB depth texture.
+  sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.camera.near = 0.5;
   sun.shadow.camera.far = 46;
   sun.shadow.camera.left = -8.5;
@@ -1163,7 +1163,9 @@ export function buildRoom(renderer) {
   }
 
   function update(t, dt) {
-    if (t - lastScreen > 0.2) {
+    // The monitor redraw is a full canvas repaint plus a texture upload, so it
+    // runs a few times a second at most, and never while the tab is hidden.
+    if (!document.hidden && t - lastScreen > 0.5) {
       T.screen.draw(t);
       lastScreen = t;
     }
