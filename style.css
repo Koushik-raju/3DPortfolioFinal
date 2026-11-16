@@ -5396,25 +5396,26 @@ body.object-focus .hero {
 }
 
 /* ==========================================================================
-   The identity plate: the name belongs under the room, not over it.
+   The opening plate: a stacked title in the lower-left corner over a soft
+   scrim, so the room keeps the right of the frame and the type stays legible
+   whatever the light does.
    ========================================================================== */
 
 .hero {
-  left: 50%;
+  left: clamp(20px, 4.6vw, 76px);
   right: auto;
-  bottom: clamp(88px, 12vh, 108px);
-  width: min(830px, calc(100vw - 40px));
+  bottom: clamp(92px, 12vh, 124px);
+  width: min(540px, calc(100vw - 48px));
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(14px, 2vw, 26px);
-  transform: translateX(-50%);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  transform: none;
 }
 
 .hero::before {
-  inset: -26px -46px -28px -46px;
-  background: radial-gradient(ellipse 72% 105% at 46% 55%, rgba(7, 5, 5, 0.72), rgba(7, 5, 5, 0.32) 56%, transparent 78%);
-  filter: blur(10px);
+  inset: -72px -150px -74px -90px;
+  background: radial-gradient(125% 95% at 16% 62%, rgba(8, 6, 5, 0.74), rgba(8, 6, 5, 0.34) 54%, transparent 78%);
+  filter: blur(18px);
 }
 
 .eyebrow {
@@ -5424,10 +5425,10 @@ body.object-focus .hero {
 .hero-name {
   display: flex;
   align-items: baseline;
-  gap: 0.24em;
-  font-size: clamp(26px, 2.9vw, 38px);
-  line-height: 0.92;
-  letter-spacing: -0.03em;
+  gap: 0.2em;
+  font-size: clamp(38px, 5.2vw, 72px);
+  line-height: 0.9;
+  letter-spacing: -0.038em;
   white-space: nowrap;
 }
 
@@ -5444,42 +5445,43 @@ body.object-focus .hero {
 }
 
 .hero-tagline {
-  max-width: 30ch;
-  margin: 0;
-  padding-left: clamp(12px, 1.6vw, 20px);
-  border-left: 1px solid var(--line);
-  font-size: 12.5px;
-  line-height: 1.42;
+  max-width: 44ch;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+  font-size: clamp(13px, 1.05vw, 15px);
+  line-height: 1.6;
+  color: var(--ink-dim);
 }
 
 .hero-actions {
-  flex-wrap: nowrap;
-  gap: 8px;
-  margin-top: 0;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
 }
 
 .hero-actions .btn {
-  padding: 9px 13px;
-  font-size: 9px;
-  letter-spacing: 0.1em;
+  padding: 12px 18px;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
 }
 
 @media (max-width: 1100px) {
   .hero {
-    width: min(760px, calc(100vw - 36px));
+    width: min(460px, calc(100vw - 40px));
   }
 }
 
 @media (max-width: 900px) {
   .hero {
-    left: max(14px, env(safe-area-inset-left));
-    right: max(14px, env(safe-area-inset-right));
-    bottom: calc(88px + env(safe-area-inset-bottom));
+    left: max(18px, env(safe-area-inset-left));
+    right: max(18px, env(safe-area-inset-right));
+    bottom: calc(94px + env(safe-area-inset-bottom));
     width: auto;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     justify-items: start;
-    gap: 9px;
+    gap: 0;
     transform: none;
   }
 
@@ -5502,8 +5504,8 @@ body.object-focus .hero {
 
 @media (max-height: 560px) and (min-width: 901px) {
   .hero {
-    bottom: 70px;
-    width: min(760px, calc(100vw - 36px));
+    bottom: 72px;
+    width: min(460px, calc(100vw - 36px));
   }
 
   .hero-name {

@@ -954,13 +954,15 @@ export function buildRoom(renderer) {
 
   /* --------------------------------- lights -------------------------------- */
 
-  scene.add(new THREE.HemisphereLight(0xfff4e2, 0xc09a72, 0.72));
-  scene.add(new THREE.AmbientLight(0xe6d6bd, 0.32));
+  // Lower fill and ambient than a flat interior: the room should be carried by
+  // the sun coming through the window, with the shaded side falling away.
+  scene.add(new THREE.HemisphereLight(0xfff4e2, 0xc09a72, 0.6));
+  scene.add(new THREE.AmbientLight(0xe6d6bd, 0.26));
 
   // The sun is placed so its direction runs clean through the window opening
   // and lands on the floor in front of the desk. Its previous angle cleared
   // the glass but struck the wall above the window, so the room never saw it.
-  const sun = new THREE.DirectionalLight(0xffdcab, 7.2);
+  const sun = new THREE.DirectionalLight(0xffdcab, 7.4);
   // a low morning sun: shallow enough that the window frame throws long bars
   // right across the rug instead of a small patch by the desk
   const sunAim = new THREE.Vector3(0.9, 0, 0.6);
@@ -983,7 +985,7 @@ export function buildRoom(renderer) {
   scene.add(sun, sun.target);
 
   // cool sky fill bouncing off the opposite wall
-  const fill = new THREE.DirectionalLight(0xb9d2e8, 0.3);
+  const fill = new THREE.DirectionalLight(0xb9d2e8, 0.22);
   fill.position.set(-5, 4, 6);
   fill.target.position.set(0.5, 1.6, -2);
   scene.add(fill, fill.target);

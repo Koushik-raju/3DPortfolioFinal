@@ -97,11 +97,11 @@ const OBJECT_SECTIONS = new Set(['experience', 'about']);
 
 const VIEWS = {
   home: {
-    target: [-0.3, 2.08, -3.0],
-    radius: 9.6,
-    theta: 0.0,
-    phi: 1.48,
-    fov: 42,
+    target: [-0.15, 2.0, -3.1],
+    radius: 7.6,
+    theta: 0.05,
+    phi: 1.47,
+    fov: 40,
     bias: [0, 0, 0],
     compact: { target: [-0.45, 1.95, -3.45], radius: 6.1, theta: 0.14, phi: 1.52, fov: 58 },
   },
@@ -794,8 +794,10 @@ function alignViewsToScreens() {
   });
 }
 
-const isMapped = () =>
-  window.innerWidth > 900 && !!state.section && SURFACE_SECTIONS.has(state.section);
+// Sections used to be projected onto the monitor in the room. At any real
+// window size the resulting text was too small to read, so every section now
+// opens in the full glass sheet and the screens stay part of the set dressing.
+const isMapped = () => false;
 const surfacePoint = new THREE.Vector3();
 let surfaceW = -1;
 let surfaceH = -1;
