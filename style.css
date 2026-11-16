@@ -5589,6 +5589,80 @@ body.object-focus .hero {
   border-color: rgba(180, 70, 31, 0.55);
 }
 
+/* The certificate wall is stepped through with this bar. It floats above the
+   dock and has to stay legible over the room, not over a page. */
+.object-nav {
+  position: fixed;
+  left: 50%;
+  bottom: max(clamp(90px, 12.5vh, 118px), calc(env(safe-area-inset-bottom) + 90px));
+  z-index: 24;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid rgba(243, 236, 227, 0.14);
+  border-radius: 999px;
+  background: rgba(13, 11, 11, 0.74);
+  backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+  transform: translateX(-50%);
+}
+
+.object-nav[hidden] {
+  display: none;
+}
+
+.object-nav button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.object-nav button:hover {
+  background: rgba(255, 178, 122, 0.1);
+  border-color: rgba(255, 178, 122, 0.3);
+  color: var(--ink);
+}
+
+.object-nav button:focus-visible {
+  outline: 2px solid rgba(255, 178, 122, 0.6);
+  outline-offset: 2px;
+}
+
 .object-nav__count {
-  color: rgba(180, 70, 31, 0.85);
+  padding: 0 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(180, 70, 31, 0.9);
+}
+
+body.is-lowfx .object-nav {
+  backdrop-filter: none;
+  background: rgba(11, 9, 9, 0.9);
+}
+
+@media (max-width: 820px) {
+  .object-nav {
+    bottom: max(74px, calc(env(safe-area-inset-bottom) + 74px));
+    gap: 2px;
+    padding: 5px;
+  }
+
+  .object-nav button {
+    padding: 8px 12px;
+    font-size: 9px;
+  }
 }

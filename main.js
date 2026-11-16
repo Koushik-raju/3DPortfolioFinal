@@ -91,7 +91,7 @@ let openTimer = 0;
 // Section views are aligned to the actual screens in room/world.js at boot:
 // the target is the screen centre and the angles come from its surface normal,
 // so the HTML can be mapped straight into the object.
-const SURFACE_RADIUS = { projects: 1.65, experience: 1.9, about: 0.9, contact: 0.7, certifications: 2.5 };
+const SURFACE_RADIUS = { projects: 1.45, experience: 1.9, about: 0.9, contact: 0.72, certifications: 2.5 };
 const SURFACE_SECTIONS = new Set(['projects', 'contact']);
 const OBJECT_SECTIONS = new Set(['experience', 'about']);
 
@@ -759,6 +759,7 @@ function applyView(name) {
   goal.phi = compact ? compact.phi : view.phi;
   orbitGoal.theta = 0;
   orbitGoal.phi = 0;
+
 }
 
 /* --------------------------- in-world screen ------------------------------ */
@@ -794,10 +795,11 @@ function alignViewsToScreens() {
   });
 }
 
-// Sections used to be projected onto the monitor in the room. At any real
-// window size the resulting text was too small to read, so every section now
-// opens in the full glass sheet and the screens stay part of the set dressing.
-const isMapped = () => false;
+// Sections are read on the screen that owns them: the monitor for projects,
+// the laptop lid for contact. The camera flies in close enough that the
+// projected sheet fills the glass, which is what makes the type legible.
+// Narrow viewports keep the full sheet, since a phone cannot frame a monitor.
+const isMapped = () => !!state.section && SURFACE_SECTIONS.has(state.section) && window.innerWidth > 900;
 const surfacePoint = new THREE.Vector3();
 let surfaceW = -1;
 let surfaceH = -1;
@@ -1262,13 +1264,12 @@ function init3D() {
 
   raycaster = new THREE.Raycaster();
   window.__room = room;
-
   document.fonts?.ready.then(() => room.redraw());
   return true;
 }
 
 function updateCamera(dt, t) {
-  const ease = 1 - Math.exp(-dt * 2.5);
+  const ease = 1 - Math.exp(-dt * 2.2);
   rig.target.lerp(goal.target, ease);
   rig.bias.lerp(goal.bias, ease);
   rig.radius += (goal.radius - rig.radius) * ease;
@@ -1285,10 +1286,14 @@ function updateCamera(dt, t) {
   parallax.x += (pointer.nx * edge - parallax.x) * pointerEase;
   parallax.y += (pointer.ny * edge - parallax.y) * pointerEase;
 
-  const idle = reduceMotion || state.section ? 0 : Math.sin(t * 0.16) * 0.008;
+  // the camera never sits perfectly still: a slow drift holds the eye, and a
+  // shallow breath on the dolly keeps the frame from reading as a still
+  const still = reduceMotion || !!state.section;
+  const idle = still ? 0 : Math.sin(t * 0.16) * 0.02;
+  const breath = still ? 0 : Math.sin(t * 0.21) * 0.045;
   const theta = rig.theta + orbit.theta + idle + parallax.x * 0.028;
   const phi = THREE.MathUtils.clamp(rig.phi + orbit.phi + parallax.y * 0.018, 0.7, 2.15);
-  const radius = rig.radius;
+  const radius = rig.radius + breath;
 
   camera.position.set(
     rig.target.x + radius * Math.sin(phi) * Math.sin(theta),
@@ -1648,6 +1653,8 @@ function start() {
   runLoader(() => {
     const hash = window.location.hash.replace('#', '');
     if (SECTIONS[hash]) window.setTimeout(() => openSection(hash, { silent: true }), 500);
+    else if (hash === 'experience') window.setTimeout(() => focusRack(), 500);
+    else if (hash === 'certifications') window.setTimeout(() => focusCertificates(), 500);
   });
 }
 

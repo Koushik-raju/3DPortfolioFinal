@@ -219,9 +219,13 @@ export function buildRoom(renderer) {
     box(desk, 0.22, 0.018, 0.02, M.brass, [1.55, y + 0.04, 0.59]);
   }
 
-  // under-desk light strip
-  const stripMat = new THREE.MeshStandardMaterial({ color: 0xffb27a, emissive: 0xff8a3d, emissiveIntensity: 0.55 });
+  // under-desk light strip: the one cold accent in a room lit entirely by
+  // warm lamps, which is what stops the interior reading as flat
+  const stripMat = new THREE.MeshStandardMaterial({ color: 0xa8f4ff, emissive: 0x39c6de, emissiveIntensity: 1.8 });
   box(desk, 3.9, 0.012, 0.03, stripMat, [0, 1.27, 0.58]);
+  const stripLight = new THREE.PointLight(0x4fd6ea, 1.5, 2.6, 2);
+  stripLight.position.set(0, 1.2, 0.5);
+  desk.add(stripLight);
 
   /* -------------------------------- monitors -------------------------------- */
 
@@ -249,10 +253,15 @@ export function buildRoom(renderer) {
   box(mon, 1.54, 0.92, 0.045, M.metal, [0, 2.47, 0], { r: 0.012, cast: true });
   plane(mon, 1.46, 0.84, M.screen, [0, 2.47, 0.038]);
   screens.projects = surface(mon, 1.46, 0.84, [0, 2.47, 0.047]);
-  // neck runs from the foot on the desk all the way up to the panel, so the
-  // screen is visibly mounted instead of hovering over the desktop
-  box(mon, 0.1, 0.62, 0.09, M.metal, [0, 1.72, -0.02], { cast: true });
-  box(mon, 0.62, 0.025, 0.3, M.metal, [0, 1.395, 0.06], { r: 0.012, cast: true });
+  // The panel is carried by a real arm: a desk clamp under the top, a foot
+  // plate on it, a spine with a gusset, and a VESA plate bolted to the back.
+  // Without these the screen reads as hovering over the desktop.
+  box(mon, 0.26, 0.09, 0.24, M.metal, [0, 1.3, 0.1], { r: 0.014, cast: true });     // clamp body
+  box(mon, 0.18, 0.032, 0.05, M.metal, [0, 1.385, 0.215], { r: 0.008, cast: true }); // clamp lip
+  box(mon, 0.2, 0.026, 0.36, M.metal, [0, 1.4, 0.08], { r: 0.01, cast: true });      // foot plate
+  box(mon, 0.13, 0.64, 0.11, M.metal, [0, 1.72, 0.05], { r: 0.016, cast: true });    // spine
+  box(mon, 0.1, 0.12, 0.16, M.metal, [0, 1.47, 0.08], { r: 0.014, cast: true });     // gusset
+  box(mon, 0.22, 0.22, 0.035, M.metal, [0, 2.47, -0.062], { r: 0.014, cast: true }); // vesa plate
   const monitorLed = box(mon, 0.05, 0.012, 0.01, new THREE.MeshStandardMaterial({ color: 0xffb27a, emissive: 0xff8a3d, emissiveIntensity: 2.6 }), [0, 2.02, 0.038]);
 
   // glow behind the monitor
@@ -377,21 +386,55 @@ export function buildRoom(renderer) {
 
   const chair = new THREE.Group();
   chair.position.set(-0.5, 0, -2.46);
+  chair.rotation.y = -0.14;
   scene.add(chair);
-  box(chair, 0.7, 0.12, 0.66, M.leather, [0, 0.93, 0], { r: 0.04, cast: true, receive: true });
-  box(chair, 0.66, 0.66, 0.1, M.leather, [0, 1.42, 0.33], { r: 0.04, cast: true, rot: [-0.1, 0, 0] });
-  box(chair, 0.5, 0.22, 0.07, M.leatherDark, [0, 1.2, 0.26], { r: 0.03, rot: [-0.1, 0, 0] });
-  [-0.42, 0.42].forEach((x) => {
-    box(chair, 0.07, 0.05, 0.44, M.metal, [x, 1.12, -0.01], { r: 0.02 });
-    box(chair, 0.06, 0.28, 0.06, M.metal, [x, 0.98, 0.1]);
-  });
-  cyl(chair, 0.05, 0.06, 0.44, M.metal, [0, 0.63, 0], { cast: true });
+
+  const tyre = new THREE.MeshStandardMaterial({ color: 0x121116, roughness: 0.58 });
+  const padMat = new THREE.MeshStandardMaterial({ color: 0x191218, roughness: 0.5 });
+
+  // five-star base: tapered legs, each ending in a twin-wheel caster
   for (let i = 0; i < 5; i += 1) {
-    const angle = (i / 5) * TAU;
-    const spoke = box(chair, 0.52, 0.045, 0.08, M.metal, [Math.sin(angle) * 0.26, 0.22, Math.cos(angle) * 0.26], { r: 0.02 });
+    const angle = (i / 5) * TAU + 0.32;
+    const spoke = new THREE.Group();
     spoke.rotation.y = angle;
-    add(chair, new THREE.SphereGeometry(0.045, 12, 10), M.metal, [Math.sin(angle) * 0.5, 0.19, Math.cos(angle) * 0.5]);
+    chair.add(spoke);
+    box(spoke, 0.44, 0.042, 0.075, M.metal, [0.23, 0.19, 0], { r: 0.018, cast: true });
+    box(spoke, 0.11, 0.06, 0.085, M.metal, [0.42, 0.165, 0], { r: 0.02, cast: true });
+    cyl(spoke, 0.008, 0.008, 0.1, M.metal, [0.44, 0.048, 0], { rot: [Math.PI / 2, 0, 0], segments: 8 });
+    [-0.04, 0.04].forEach((z) => {
+      cyl(spoke, 0.037, 0.037, 0.024, tyre, [0.44, 0.048, z], { rot: [Math.PI / 2, 0, 0], segments: 16, cast: true });
+    });
   }
+  cyl(chair, 0.09, 0.11, 0.1, M.metal, [0, 0.225, 0], { segments: 22, cast: true });
+  cyl(chair, 0.04, 0.044, 0.36, M.metal, [0, 0.44, 0], { segments: 18, cast: true });
+  cyl(chair, 0.032, 0.032, 0.14, new THREE.MeshStandardMaterial({ color: 0x1a171d, roughness: 0.35, metalness: 0.7 }), [0, 0.7, 0], { segments: 16 });
+  // height lever
+  box(chair, 0.14, 0.018, 0.018, M.metal, [0.12, 0.66, 0.02], { rot: [0, 0, 0.18] });
+
+  // seat: mechanism plate, pan, cushion and a seam along the front edge
+  box(chair, 0.3, 0.065, 0.24, M.metal, [0, 0.78, 0.02], { r: 0.01, cast: true });
+  box(chair, 0.68, 0.1, 0.62, M.leatherDark, [0, 0.855, 0], { r: 0.03, cast: true, receive: true });
+  box(chair, 0.66, 0.13, 0.6, M.leather, [0, 0.93, 0.01], { r: 0.055, cast: true, receive: true });
+  box(chair, 0.6, 0.01, 0.5, M.leatherDark, [0, 0.998, 0.01], { r: 0.005 });
+
+  // back: steel frame, cushion, lumbar pad and headrest
+  const back = new THREE.Group();
+  back.position.set(0, 0.99, -0.27);
+  back.rotation.x = -0.12;
+  chair.add(back);
+  box(back, 0.5, 0.72, 0.045, M.metal, [0, 0.36, 0], { r: 0.02, cast: true });
+  box(back, 0.48, 0.6, 0.12, M.leather, [0, 0.36, 0.08], { r: 0.05, cast: true });
+  box(back, 0.4, 0.12, 0.08, M.leatherDark, [0, 0.09, 0.15], { r: 0.035 });
+  box(back, 0.1, 0.18, 0.055, M.metal, [0, 0.66, 0.04], { r: 0.015, cast: true });
+  box(back, 0.32, 0.13, 0.08, M.leather, [0, 0.76, 0.07], { r: 0.04, cast: true });
+
+  // arms: bracket, stem, top rail and pad
+  [-0.36, 0.36].forEach((x) => {
+    box(chair, 0.055, 0.05, 0.12, M.metal, [x, 0.79, 0.02], { r: 0.01, cast: true });
+    cyl(chair, 0.026, 0.026, 0.26, M.metal, [x, 0.92, 0.02], { segments: 12, cast: true });
+    box(chair, 0.1, 0.032, 0.34, M.metal, [x, 1.05, 0.03], { r: 0.012, cast: true });
+    box(chair, 0.088, 0.03, 0.31, padMat, [x, 1.074, 0.03], { r: 0.014, cast: true });
+  });
 
   /* ---------------------------------- rug ---------------------------------- */
 
