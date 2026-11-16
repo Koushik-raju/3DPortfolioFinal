@@ -183,44 +183,51 @@ function rugCanvas() {
 
 function cityCanvas() {
   const [canvas, g] = makeCanvas(1600, 900);
+  // the sun has already dropped behind the rooftops: deep blue overhead, a
+  // band of warm dust at the skyline, and lit windows in the towers
   const sky = g.createLinearGradient(0, 0, 0, 900);
-  sky.addColorStop(0, '#3f78ae');
-  sky.addColorStop(0.3, '#7fafd2');
-  sky.addColorStop(0.56, '#c3dbe8');
-  sky.addColorStop(0.78, '#ecdfc8');
-  sky.addColorStop(0.92, '#f6ead4');
-  sky.addColorStop(1, '#dcc9ab');
+  sky.addColorStop(0, '#070c16');
+  sky.addColorStop(0.34, '#101c30');
+  sky.addColorStop(0.62, '#22304a');
+  sky.addColorStop(0.82, '#4a4055');
+  sky.addColorStop(0.94, '#7a5648');
+  sky.addColorStop(1, '#38292a');
   g.fillStyle = sky;
   g.fillRect(0, 0, 1600, 900);
 
-  // high morning sun and the haze it throws over the skyline
-  const sun = g.createRadialGradient(1120, 250, 18, 1120, 250, 620);
-  sun.addColorStop(0, 'rgba(255,253,243,.95)');
-  sun.addColorStop(0.12, 'rgba(255,248,227,.55)');
-  sun.addColorStop(0.45, 'rgba(255,241,214,.18)');
-  sun.addColorStop(1, 'rgba(255,240,210,0)');
-  g.fillStyle = sun;
-  g.fillRect(460, 0, 1300, 900);
+  // the last of the sun, low and small
+  const glow = g.createRadialGradient(1080, 700, 8, 1080, 700, 560);
+  glow.addColorStop(0, 'rgba(255,186,116,.52)');
+  glow.addColorStop(0.18, 'rgba(255,148,88,.22)');
+  glow.addColorStop(0.58, 'rgba(170,104,78,.09)');
+  glow.addColorStop(1, 'rgba(110,74,66,0)');
+  g.fillStyle = glow;
+  g.fillRect(380, 180, 1220, 720);
 
-  // thin drifts of cloud
-  for (let i = 0; i < 7; i += 1) {
-    const y = 110 + rnd() * 320;
-    const w = 180 + rnd() * 440;
-    const x = rnd() * 1500 - 120;
-    const cloud = g.createLinearGradient(x, y, x, y + 28);
-    cloud.addColorStop(0, 'rgba(255,255,255,0)');
-    cloud.addColorStop(0.5, `rgba(255,253,247,${0.16 + rnd() * 0.16})`);
-    cloud.addColorStop(1, 'rgba(255,255,255,0)');
-    g.fillStyle = cloud;
-    g.fillRect(x, y, w, 28);
+  // stars only where the sky is still dark
+  for (let i = 0; i < 80; i += 1) {
+    g.fillStyle = `rgba(226,236,255,${0.1 + rnd() * 0.35})`;
+    g.fillRect(rnd() * 1600, rnd() * 320, 1.6, 1.6);
   }
 
-  // skyline, back to front
-  // distance reads as warm haze rather than darkness
+  // thin drifts of cloud, lit from below
+  for (let i = 0; i < 6; i += 1) {
+    const y = 120 + rnd() * 300;
+    const w = 220 + rnd() * 460;
+    const x = rnd() * 1500 - 120;
+    const cloud = g.createLinearGradient(x, y, x, y + 26);
+    cloud.addColorStop(0, 'rgba(120,130,160,0)');
+    cloud.addColorStop(0.55, `rgba(${90 + rnd() * 40},${100 + rnd() * 40},${140 + rnd() * 40},${0.1 + rnd() * 0.12})`);
+    cloud.addColorStop(1, 'rgba(120,130,160,0)');
+    g.fillStyle = cloud;
+    g.fillRect(x, y, w, 26);
+  }
+
+  // skyline, back to front; every layer gets lit windows now
   const layers = [
-    { base: 690, h: [130, 330], color: 'rgba(158,178,190,.5)', windows: false, w: [40, 110] },
-    { base: 760, h: [110, 380], color: 'rgba(120,140,152,.78)', windows: true, w: [50, 130] },
-    { base: 860, h: [60, 240], color: 'rgba(82,96,106,1)', windows: true, w: [70, 170] },
+    { base: 690, h: [130, 330], color: 'rgba(24,32,50,.78)', w: [40, 110], lit: 0.34 },
+    { base: 770, h: [110, 380], color: 'rgba(14,20,33,.92)', w: [50, 130], lit: 0.44 },
+    { base: 870, h: [60, 240], color: 'rgba(7,10,17,1)', w: [70, 170], lit: 0.52 },
   ];
   layers.forEach((layer, li) => {
     let x = -40;
@@ -229,45 +236,32 @@ function cityCanvas() {
       const h = rand(layer.h[0], layer.h[1]) * (li === 2 ? 0.8 : 1);
       g.fillStyle = layer.color;
       g.fillRect(x, layer.base - h, w, h + 200);
-      if (layer.windows) {
-        const cols = Math.floor(w / 18);
-        const rows = Math.floor(h / 22);
-        for (let c = 0; c < cols; c += 1) {
-          for (let r = 0; r < rows; r += 1) {              if (rnd() > 0.62) {
-              const alpha = 0.25 + rnd() * 0.45;
-              g.fillStyle = rnd() > 0.3 ? `rgba(240,248,252,${alpha})` : `rgba(206,226,238,${alpha * 0.8})`;
-              g.fillRect(x + 8 + c * 18, layer.base - h + 12 + r * 22, 6, 9);
-            }
+      const cols = Math.floor(w / 18);
+      const rows = Math.floor(h / 22);
+      for (let c = 0; c < cols; c += 1) {
+        for (let r = 0; r < rows; r += 1) {
+          if (rnd() < layer.lit) {
+            const warm = rnd() > 0.22;
+            g.fillStyle = warm
+              ? `rgba(255,196,128,${0.34 + rnd() * 0.5})`
+              : `rgba(168,203,236,${0.26 + rnd() * 0.4})`;
+            g.fillRect(x + 8 + c * 18, layer.base - h + 12 + r * 22, 6, 9);
           }
         }
       }
-      // antenna / water tank
+      // mast with an aircraft light
       if (rnd() > 0.72 && li < 2) {
         g.fillStyle = layer.color;
-        g.fillRect(x + w * 0.5, layer.base - h - 40, 3, 40);
+        g.fillRect(x + w * 0.5, layer.base - h - 40, 2, 40);
+        g.fillStyle = 'rgba(255,110,80,.9)';
+        g.fillRect(x + w * 0.5 - 1, layer.base - h - 42, 4, 3);
       }
       x += w + rand(4, 22);
     }
   });
 
-  // low sun catching the far facades
-  const warm = g.createLinearGradient(0, 300, 1600, 780);
-  warm.addColorStop(0, 'rgba(255,206,148,.16)');
-  warm.addColorStop(0.5, 'rgba(255,200,140,.06)');
-  warm.addColorStop(1, 'rgba(255,198,140,0)');
-  g.fillStyle = warm;
-  g.fillRect(0, 0, 1600, 900);
-
-  // foreground rooftops
-  g.fillStyle = '#77858d';
-  for (let i = 0; i < 9; i += 1) {
-    const w = rand(120, 300);
-    const x = rand(-50, 1550);
-    const h = rand(30, 90);
-    g.fillRect(x, 900 - h, w, h);
-  }
-  // near silhouette, for depth through the glass
-  g.fillStyle = 'rgba(64,76,84,.9)';
+  // near silhouettes, for depth through the glass
+  g.fillStyle = 'rgba(6,8,13,.97)';
   g.fillRect(0, 838, 1600, 62);
   for (let i = 0; i < 14; i += 1) {
     const x = rand(-40, 1580);

@@ -44,8 +44,8 @@ export function buildRoom(renderer) {
   const T = createTextures(renderer, experience);
   const scene = new THREE.Scene();
   // daylight: a warm, hazy room instead of a night interior
-  scene.background = new THREE.Color(0xcdd6d6);
-  scene.fog = new THREE.FogExp2(0xcdd6d6, 0.015);
+  scene.background = new THREE.Color(0x0e121b);
+  scene.fog = new THREE.FogExp2(0x0e121b, 0.022);
 
   const M = {
     floor: new THREE.MeshPhysicalMaterial({
@@ -62,12 +62,13 @@ export function buildRoom(renderer) {
     }),
     wall: new THREE.MeshStandardMaterial({
       map: T.wall,
+      color: 0x8a8072,
       bumpMap: T.wall,
       bumpScale: 0.005,
       roughness: 0.92,
       metalness: 0,
     }),
-    ceiling: new THREE.MeshStandardMaterial({ color: 0xd2c8b7, roughness: 0.95 }),
+    ceiling: new THREE.MeshStandardMaterial({ color: 0x8b8375, roughness: 0.95 }),
     walnut: new THREE.MeshPhysicalMaterial({
       color: 0x4a3629,
       bumpMap: T.grain,
@@ -455,7 +456,7 @@ export function buildRoom(renderer) {
   // warm LED under the middle shelf, so the left side reads at night
   const shelfStripMat = new THREE.MeshStandardMaterial({ color: 0xffc08a, emissive: 0xff9a4d, emissiveIntensity: 1.2 });
   box(shelf, 3.0, 0.008, 0.022, shelfStripMat, [0, shelfY[2] - 0.038, 0.19]);
-  const shelfGlow = new THREE.PointLight(0xffa863, 1.1, 2.4, 2);
+  const shelfGlow = new THREE.PointLight(0xffa863, 2.4, 2.8, 2);
   shelfGlow.position.set(-5.2, 1.72, -1.5);
   scene.add(shelfGlow);
 
@@ -600,7 +601,7 @@ export function buildRoom(renderer) {
   neighbour.rotation.z = 0.035;
   box(shelf, 0.045, 0.012, 0.02, M.brass, [0.34, shelfY[2] + 0.26, 0.17]);
 
-  const bookLight = new THREE.PointLight(0xffc49a, 0.6, 1.8, 2);
+  const bookLight = new THREE.PointLight(0xffc49a, 1.3, 2.1, 2);
   bookLight.position.set(-4.95, 2.9, -2.3);
   scene.add(bookLight);
 
@@ -713,7 +714,7 @@ export function buildRoom(renderer) {
   cardFocus.position.set(0, -0.4, 0.03);
   rack.add(cardFocus);
 
-  const cardLight = new THREE.PointLight(0xffb27a, 0.35, 2.2, 2);
+  const cardLight = new THREE.PointLight(0xffb27a, 1.0, 2.4, 2);
   cardLight.position.set(-4.12, 2.35, -4.28);
   scene.add(cardLight);
 
@@ -956,13 +957,15 @@ export function buildRoom(renderer) {
 
   // Lower fill and ambient than a flat interior: the room should be carried by
   // the sun coming through the window, with the shaded side falling away.
-  scene.add(new THREE.HemisphereLight(0xfff4e2, 0xc09a72, 0.6));
-  scene.add(new THREE.AmbientLight(0xe6d6bd, 0.26));
+  // dusk: a cold sky and a warm floor bounce, kept low so the lamps and the
+  // monitor carry the room instead of a flat interior light
+  scene.add(new THREE.HemisphereLight(0x7f95bd, 0x2a1f19, 0.2));
+  scene.add(new THREE.AmbientLight(0x8a97b4, 0.05));
 
   // The sun is placed so its direction runs clean through the window opening
   // and lands on the floor in front of the desk. Its previous angle cleared
   // the glass but struck the wall above the window, so the room never saw it.
-  const sun = new THREE.DirectionalLight(0xffdcab, 7.4);
+  const sun = new THREE.DirectionalLight(0xa9c0e0, 1.7);
   // a low morning sun: shallow enough that the window frame throws long bars
   // right across the rug instead of a small patch by the desk
   const sunAim = new THREE.Vector3(0.9, 0, 0.6);
@@ -985,12 +988,12 @@ export function buildRoom(renderer) {
   scene.add(sun, sun.target);
 
   // cool sky fill bouncing off the opposite wall
-  const fill = new THREE.DirectionalLight(0xb9d2e8, 0.22);
+  const fill = new THREE.DirectionalLight(0x6c7fa3, 0.16);
   fill.position.set(-5, 4, 6);
   fill.target.position.set(0.5, 1.6, -2);
   scene.add(fill, fill.target);
 
-  const pendantLight = new THREE.SpotLight(0xffb98a, 5.5, 8.5, 0.88, 0.9, 1.8);
+  const pendantLight = new THREE.SpotLight(0xffb070, 13, 9, 0.95, 0.9, 1.7);
   pendantLight.position.set(1.55, 3.3, -2.5);
   pendantLight.target.position.set(0.4, 0.2, -2.3);
   pendantLight.castShadow = true;
@@ -999,11 +1002,11 @@ export function buildRoom(renderer) {
   pendantLight.shadow.normalBias = 0.02;
   scene.add(pendantLight, pendantLight.target);
 
-  const monitorLight = new THREE.PointLight(0x9db8e8, 3.4, 3.4, 2);
+  const monitorLight = new THREE.PointLight(0x93aee0, 5.2, 3.6, 2);
   monitorLight.position.set(-0.5, 2.3, -3.3);
   scene.add(monitorLight);
 
-  const wallLight = new THREE.PointLight(0xffa25f, 0.7, 2.8, 2);
+  const wallLight = new THREE.PointLight(0xffa25f, 2.2, 3.2, 2);
   wallLight.position.set(4.0, 3.65, -4.3);
   scene.add(wallLight);
 

@@ -1227,7 +1227,7 @@ function init3D() {
   applyResolution(startRenderRatio());
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
+  renderer.toneMappingExposure = 1.14;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   // the room is static: render its shadows once, then only when an object
@@ -1241,7 +1241,7 @@ function init3D() {
   const pmrem = new THREE.PMREMGenerator(renderer);
   const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environment = environment;
-  scene.environmentIntensity = 0.42;
+  scene.environmentIntensity = 0.14;
 
   room = buildRoom(renderer);
   scene.add(room.scene);
