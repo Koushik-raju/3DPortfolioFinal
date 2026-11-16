@@ -103,7 +103,6 @@ export function buildRoom(renderer) {
     greenDark: new THREE.MeshStandardMaterial({ color: 0x1e2c24, roughness: 0.64, side: THREE.DoubleSide }),
     ceramic: new THREE.MeshStandardMaterial({ color: 0xc6bbae, roughness: 0.42 }),
     terracotta: new THREE.MeshStandardMaterial({ color: 0x8a5b46, roughness: 0.76 }),
-    curtain: new THREE.MeshStandardMaterial({ color: 0xbdae97, roughness: 0.96, side: THREE.DoubleSide }),
     shade: new THREE.MeshStandardMaterial({ color: 0x2a2420, roughness: 0.7, side: THREE.DoubleSide }),
     fabricShade: new THREE.MeshStandardMaterial({ color: 0xcdbca4, roughness: 0.88, side: THREE.DoubleSide, emissive: 0x7d4a24, emissiveIntensity: 0.1 }),
     glass: new THREE.MeshPhysicalMaterial({
@@ -187,22 +186,9 @@ export function buildRoom(renderer) {
   [1.9, 2.9].forEach((y) => box(scene, winW, 0.11, 0.07, frameMat, [winCX, y, -4.94], { cast: true }));
   box(scene, winW + 0.44, 0.09, 0.36, M.walnut, [winCX, winY[0] - 0.03, -4.86], { r: 0.02, receive: true, cast: true });
 
-  function curtain(xPos, width, height) {
-    const geo = new THREE.PlaneGeometry(width, height, 40, 6);
-    const pos = geo.attributes.position;
-    for (let i = 0; i < pos.count; i += 1) {
-      const x = pos.getX(i);
-      const y = pos.getY(i);
-      const wave = Math.sin((x / width) * Math.PI * 10) * 0.05 + Math.sin((x / width) * Math.PI * 22) * 0.014;
-      pos.setZ(i, wave * (0.65 + 0.35 * Math.cos((y / height) * Math.PI)));
-    }
-    geo.computeVertexNormals();
-    return add(scene, geo, M.curtain, [xPos, 2.34, -4.78], { cast: true });
-  }
-  curtain(winX[0] - 0.32, 0.78, 4.12);
-  curtain(winX[1] + 0.28, 0.6, 4.12);
-  const rod = cyl(scene, 0.022, 0.022, winW + 1.2, M.brass, [winCX, 4.42, -4.74], { rot: [0, 0, Math.PI / 2] });
-  rod.castShadow = false;
+  // Curtains used to hang either side of the window, but they sat directly in
+  // front of the lanyards and the certificate wall, so the window now reads
+  // clean to the glass and those objects have the wall to themselves.
 
   // the bright haze that pools in from the window
   plane(
@@ -1268,8 +1254,6 @@ export function buildRoom(renderer) {
     });
     pendantBulb.material.emissiveIntensity = 2.2 + Math.sin(t * 0.8) * 0.2;
 
-    // curtains breathe a little
-    scene.children.forEach(() => {});
   }
 
   // warm the screen texture once
