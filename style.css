@@ -2891,13 +2891,19 @@ body.panel-open .panel {
     border: 0;
     border-radius: 7px;
     transform: none;
+    /* a screen emits: the sheet carries its own light instead of looking like
+       dark glass laid over the panel */
+    --ink: #f2f7ff;
+    --ink-dim: rgba(214, 228, 244, 0.82);
+    color: var(--ink);
     background:
-      radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 178, 122, 0.07), transparent 60%),
-      linear-gradient(180deg, #0e0c10 0%, #07060a 72%);
+      radial-gradient(ellipse 78% 50% at 50% 0%, rgba(79, 214, 234, 0.14), transparent 62%),
+      linear-gradient(180deg, #131c28 0%, #0b1119 74%, #080c12 100%);
     box-shadow:
-      0 0 0 1px rgba(255, 186, 138, 0.14),
-      inset 0 0 80px rgba(0, 0, 0, 0.6),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      0 0 0 1px rgba(120, 210, 235, 0.28),
+      0 0 44px rgba(79, 214, 234, 0.16),
+      inset 0 0 110px rgba(120, 205, 245, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
     transition: opacity 0.34s var(--ease) 0.04s;
   }
 
@@ -2951,6 +2957,34 @@ body.panel-open .panel {
     margin-top: 10px;
     font-size: 12px;
     line-height: 1.6;
+    color: rgba(226, 238, 252, 0.86);
+  }
+
+  .panel.is-surface .section-title {
+    color: #f6faff;
+    text-shadow: 0 0 26px rgba(120, 200, 240, 0.18);
+  }
+
+  .panel.is-surface .project {
+    background: rgba(150, 195, 230, 0.07);
+    border-color: rgba(160, 205, 235, 0.2);
+  }
+
+  .panel.is-surface .project h3,
+  .panel.is-surface .project p {
+    color: rgba(232, 241, 252, 0.9);
+  }
+
+  .panel.is-surface .project-meta,
+  .panel.is-surface .project-stack span,
+  .panel.is-surface .section-sub {
+    color: rgba(196, 214, 236, 0.8);
+  }
+
+  .panel.is-surface .panel-head,
+  .panel.is-surface .panel-foot {
+    background: rgba(140, 190, 225, 0.06);
+    border-color: rgba(150, 200, 235, 0.16);
   }
 
   .panel.is-surface .project-list {

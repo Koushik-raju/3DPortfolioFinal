@@ -556,8 +556,7 @@ function makeAudio() {
     filter.type = 'lowpass';
     filter.frequency.value = 420;
     osc.connect(gain).connect(filter).connect(master);
-    osc.start();
-  });
+    osc.start();  });
 
   const buffer = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate);
   const data = buffer.getChannelData(0);
@@ -759,7 +758,6 @@ function applyView(name) {
   goal.phi = compact ? compact.phi : view.phi;
   orbitGoal.theta = 0;
   orbitGoal.phi = 0;
-
 }
 
 /* --------------------------- in-world screen ------------------------------ */

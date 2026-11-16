@@ -40,6 +40,9 @@ function tube(parent, points, radius, mat, opts = {}) {
   return add(parent, geo, mat, [0, 0, 0], opts);
 }
 
+// every LED in the room runs off this one cold accent
+const ACCENT = 0x4fd6ea;
+
 export function buildRoom(renderer) {
   const T = createTextures(renderer, experience);
   const scene = new THREE.Scene();
@@ -221,9 +224,9 @@ export function buildRoom(renderer) {
 
   // under-desk light strip: the one cold accent in a room lit entirely by
   // warm lamps, which is what stops the interior reading as flat
-  const stripMat = new THREE.MeshStandardMaterial({ color: 0xa8f4ff, emissive: 0x39c6de, emissiveIntensity: 1.8 });
+  const stripMat = new THREE.MeshStandardMaterial({ color: 0xcaf7ff, emissive: ACCENT, emissiveIntensity: 2.4 });
   box(desk, 3.9, 0.012, 0.03, stripMat, [0, 1.27, 0.58]);
-  const stripLight = new THREE.PointLight(0x4fd6ea, 1.5, 2.6, 2);
+  const stripLight = new THREE.PointLight(ACCENT, 1.8, 2.6, 2);
   stripLight.position.set(0, 1.2, 0.5);
   desk.add(stripLight);
 
@@ -269,7 +272,7 @@ export function buildRoom(renderer) {
     mon,
     2.6,
     1.7,
-    new THREE.MeshBasicMaterial({ map: T.glow, color: 0x7d9dff, transparent: true, opacity: 0.14, blending: THREE.AdditiveBlending, depthWrite: false }),
+    new THREE.MeshBasicMaterial({ map: T.glow, color: ACCENT, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending, depthWrite: false }),
     [0, 2.4, -0.11],
   );
 
@@ -917,7 +920,7 @@ export function buildRoom(renderer) {
   const fanMats = [];
   for (let i = 0; i < 3; i += 1) {
     const y = 0.66 - i * 0.19;
-    const mat = new THREE.MeshStandardMaterial({ color: 0x1c1822, emissive: 0x6a4fcf, emissiveIntensity: 1.4, metalness: 0.6, roughness: 0.34 });
+    const mat = new THREE.MeshStandardMaterial({ color: 0x161c22, emissive: ACCENT, emissiveIntensity: 1.9, metalness: 0.6, roughness: 0.34 });
     const fan = add(tower, new THREE.TorusGeometry(0.075, 0.008, 8, 28), mat, [0, y, 0.355]);
     const disc = add(tower, new THREE.CircleGeometry(0.07, 24), new THREE.MeshBasicMaterial({ color: 0x2a2136, transparent: true, opacity: 0.85 }), [0, y, 0.354]);
     fanMats.push(mat);
@@ -1031,7 +1034,7 @@ export function buildRoom(renderer) {
   pendantLight.shadow.normalBias = 0.02;
   scene.add(pendantLight, pendantLight.target);
 
-  const monitorLight = new THREE.PointLight(0x93aee0, 5.2, 3.6, 2);
+  const monitorLight = new THREE.PointLight(ACCENT, 4.2, 3.6, 2);
   monitorLight.position.set(-0.5, 2.3, -3.3);
   scene.add(monitorLight);
 
