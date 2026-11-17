@@ -282,10 +282,8 @@ export function buildRoom(renderer) {
     [0, 2.4, -0.11],
   );
 
-  // magenta wash behind the panel
-  const neonBack = new THREE.PointLight(NEON.magenta, 3.4, 3.4, 2);
-  neonBack.position.set(0, 2.2, -0.42);
-  mon.add(neonBack);
+  // The magenta behind the panel is the additive glow plane below, not a lamp:
+  // a point light there measured ~1ms/frame for a wall the plane already tints.
 
   // webcam
   box(mon, 0.12, 0.035, 0.05, M.metal, [0, 2.96, 0.01], { r: 0.01 });
@@ -319,9 +317,6 @@ export function buildRoom(renderer) {
   // keyboard
   const keyboard = new THREE.Group();
   keyboard.position.set(-0.06, 1.4, 0.52);
-  const keyGlow = new THREE.PointLight(NEON.cyan, 1.1, 1.1, 2);
-  keyGlow.position.set(0, 0.02, 0.06);
-  keyboard.add(keyGlow);
   desk.add(keyboard);
   box(keyboard, 1.04, 0.034, 0.34, new THREE.MeshStandardMaterial({ color: 0x211d26, roughness: 0.6 }), [0, 0, 0], { r: 0.014, cast: true });
   const keyGeo = rounded(0.058, 0.014, 0.058, 0.006, 2);
