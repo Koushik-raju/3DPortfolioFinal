@@ -449,46 +449,65 @@ const PANELS = {
 
   contact: () => `
     <div class="section">
-      <div class="letter-head" aria-hidden="true">
-        <span class="letter-monogram">K</span>
-        <span class="letter-from">Koushik Raju · personal correspondence</span>
-        <span class="letter-seal">KR</span>
-      </div>
       <header class="section-head">
         <p class="section-kicker">04 — Say hello</p>
         <h2 class="section-title" id="panelTitle">Contact</h2>
         <p class="section-lede">${esc(contact.headline)}</p>
       </header>
-      <div class="contact-card">
-        <p class="contact-kicker">Email — the fastest way</p>
-        <a class="contact-mail" href="mailto:${esc(person.email)}">${esc(person.email)}</a>
-        <p class="contact-note">${esc(contact.note)}</p>
-        <div class="contact-actions">
-          <a class="btn btn--amber" href="mailto:${esc(person.email)}">Write an email <span aria-hidden="true">↗</span></a>
-          <button class="btn btn--ghost" type="button" data-copy="${esc(person.email)}">Copy address</button>
-        </div>
-      </div>
-      <ul class="contact-links">
-        ${contact.links
-          .map(
-            (link) => `
-          <li>
-            <a href="${esc(link.href)}" ${link.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>
-              <span>${esc(link.label)}</span>
-              <span>${esc(link.value)}</span>
-              <span aria-hidden="true">↗</span>
-            </a>
-          </li>`,
-          )
-          .join('')}
-      </ul>
-      <p class="letter-sign" aria-hidden="true">— Koushik</p>
-      <div class="terminal" aria-hidden="true">
-        <p class="t-cmd"><span>$</span> whoami</p>
-        <p>koushik — developer, tester, designer</p>
-        <p class="t-cmd"><span>$</span> availability --now</p>
-        <p class="t-ok">● ${esc(person.availability)}</p>
-        <p class="t-cmd"><span>$</span> <span class="caret"></span></p>
+      <div class="project-list">
+        <article class="project">
+          <div class="project-top">
+            <span class="project-index">01</span>
+            <div class="project-head">
+              <h3 class="project-name">Email</h3>
+              <p class="project-meta">The fastest way — I reply to everything</p>
+            </div>
+          </div>
+          <a class="contact-mail" href="mailto:${esc(person.email)}">${esc(person.email)}</a>
+          <p class="project-summary">${esc(contact.note)}</p>
+          <div class="project-foot">
+            <a class="btn btn--amber" href="mailto:${esc(person.email)}">Write an email <span aria-hidden="true">↗</span></a>
+            <button class="btn btn--ghost" type="button" data-copy="${esc(person.email)}">Copy address</button>
+          </div>
+        </article>
+        <article class="project">
+          <div class="project-top">
+            <span class="project-index">02</span>
+            <div class="project-head">
+              <h3 class="project-name">Elsewhere</h3>
+              <p class="project-meta">Code, notes, the odd post</p>
+            </div>
+          </div>
+          <ul class="contact-links">
+            ${contact.links
+              .map(
+                (link) => `
+              <li>
+                <a href="${esc(link.href)}" ${link.href.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+                  <span>${esc(link.label)}</span>
+                  <span>${esc(link.value)}</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </li>`,
+              )
+              .join('')}
+          </ul>
+        </article>
+        <article class="project">
+          <div class="project-top">
+            <span class="project-index">03</span>
+            <div class="project-head">
+              <h3 class="project-name">Availability</h3>
+              <p class="project-meta">Front-end, QA and testing</p>
+            </div>
+          </div>
+          <p class="project-summary"><span class="contact-open">● ${esc(person.availability)}</span></p>
+          <div class="chips">
+            <span class="chip">India</span>
+            <span class="chip">Open to remote</span>
+            <span class="chip">2026</span>
+          </div>
+        </article>
       </div>
     </div>`,
 };

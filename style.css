@@ -428,9 +428,9 @@ a {
 }
 
 .btn--amber {
-  background: var(--amber);
-  border-color: var(--amber);
-  color: #231410;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .btn--amber:hover {
@@ -1485,7 +1485,8 @@ body.panel-open .panel {
 .contact-mail {
   display: inline-block;
   margin: 10px 0 0;
-  font-size: clamp(20px, 3vw, 27px);
+  font-size: clamp(18px, 2.4vw, 24px);
+  overflow-wrap: anywhere;
   font-weight: 400;
   letter-spacing: -0.02em;
   border-bottom: 1px solid rgba(255, 178, 122, 0.35);
@@ -2996,6 +2997,11 @@ body.panel-open .panel {
     border-color: rgba(150, 200, 235, 0.16);
   }
 
+  .panel.is-surface .contact-mail {
+    font-size: 20px;
+    border-bottom-color: rgba(160, 205, 235, 0.28);
+  }
+
   .panel.is-surface .project-list {
     gap: 12px;
     margin-top: 22px;
@@ -3288,241 +3294,8 @@ body.panel-open .panel {
 }
 
 /* --- contact: the letter lifts off the desk and becomes the page --- */
-.panel.is-surface[data-section="contact"] {
-  border-radius: 3px;
-  color: #eef5ff;
-  background:
-    radial-gradient(ellipse 78% 50% at 50% 0%, rgba(255, 46, 136, 0.16), transparent 62%),
-    linear-gradient(180deg, #1a1522 0%, #100c16 72%, #0a0810 100%);
-  box-shadow:
-    0 0 0 1px rgba(255, 46, 136, 0.3),
-    0 0 44px rgba(255, 46, 136, 0.18),
-    inset 0 0 110px rgba(255, 46, 136, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.panel.is-surface[data-section="contact"] .panel-head {
-  background: transparent;
-  border-bottom: 1px solid rgba(228, 238, 250, 0.14);
-}
-
-.panel.is-surface[data-section="contact"] .panel-dots i {
-  background: rgba(228, 238, 250, 0.25);
-}
-
-.panel.is-surface[data-section="contact"] .panel-path,
-.panel.is-surface[data-section="contact"] .panel-count {
-  color: rgba(228, 238, 250, 0.72);
-}
-
-.panel.is-surface[data-section="contact"] .panel-count {
-  color: #8c2f24;
-}
-
-.panel.is-surface[data-section="contact"] .panel-close {
-  color: #f2f7ff;
-  border-color: rgba(228, 238, 250, 0.28);
-}
-
-.panel.is-surface[data-section="contact"] .panel-close:hover {
-  color: #ff2e88;
-  border-color: #ff2e88;
-  background: rgba(124, 35, 27, 0.06);
-}
-
-.panel.is-surface[data-section="contact"] .panel-foot {
-  display: none;
-}
-
-.panel.is-surface[data-section="contact"] .panel-scroll {
-  padding: 26px 34px 30px;
-}
-
-.panel.is-surface[data-section="contact"] .section-kicker {
-  display: none;
-}
-
-.panel.is-surface[data-section="contact"] .section-title {
-  font-family: var(--serif);
-  font-size: 44px;
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  color: #f2f7ff;
-}
-
-.panel.is-surface[data-section="contact"] .section-lede {
-  max-width: 40ch;
-  margin-top: 8px;
-  font-family: var(--serif);
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgba(228, 238, 250, 0.76);
-}
-
-.panel.is-surface[data-section="contact"] .letter-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-bottom: 13px;
-  border-bottom: 1px solid rgba(228, 238, 250, 0.16);
-  font-family: var(--mono);
-  font-size: 8px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(228, 238, 250, 0.74);
-}
-
-.letter-monogram {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 29px;
-  height: 29px;
-  border: 1px solid rgba(228, 238, 250, 0.4);
-  border-radius: 50%;
-  font-family: var(--serif);
-  font-size: 16px;
-  font-style: italic;
-  color: #eef5ff;
-}
-
-.letter-from {
-  flex: 1;
-}
-
-.letter-seal {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 28%, #ff6aa8, #c2145a 70%);
-  color: #1a0510;
-  font-family: var(--serif);
-  font-size: 11px;
-  box-shadow: 0 3px 8px rgba(60, 20, 12, 0.35), inset 0 1px 2px rgba(255, 220, 190, 0.35);
-}
-
-.panel.is-surface[data-section="contact"] .contact-card {
-  margin-top: 18px;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: none;
-}
-
-.panel.is-surface[data-section="contact"] .contact-kicker {
-  color: rgba(228, 238, 250, 0.72);
-}
-
-.panel.is-surface[data-section="contact"] .contact-mail {
-  font-family: var(--serif);
-  font-size: clamp(26px, 2.8vw, 38px);
-  color: #eef5ff;
-  border-bottom-color: rgba(228, 238, 250, 0.32);
-}
-
-.panel.is-surface[data-section="contact"] .contact-mail:hover {
-  color: #ff2e88;
-  border-color: #ff2e88;
-}
-
-.panel.is-surface[data-section="contact"] .contact-note {
-  color: rgba(228, 238, 250, 0.78);
-}
-
-.panel.is-surface[data-section="contact"] .btn--amber {
-  background: #ff2e88;
-  border-color: #ff2e88;
-  color: #fff;
-  box-shadow: 0 12px 30px rgba(255, 46, 136, 0.32);
-}
-
-.panel.is-surface[data-section="contact"] .btn--amber:hover {
-  background: #ff2e88;
-  border-color: #ff2e88;
-}
-
-.panel.is-surface[data-section="contact"] .btn--ghost {
-  background: rgba(228, 238, 250, 0.05);
-  color: #eef5ff;
-  border-color: rgba(228, 238, 250, 0.32);
-}
-
-.panel.is-surface[data-section="contact"] .btn--ghost:hover {
-  background: rgba(228, 238, 250, 0.1);
-  color: #eef5ff;
-  border-color: #eef5ff;
-}
-
-.panel.is-surface[data-section="contact"] .contact-links {
-  margin-top: 18px;
-  border-top: 1px solid rgba(228, 238, 250, 0.14);
-}
-
-.panel.is-surface[data-section="contact"] .contact-links li {
-  border-bottom-color: rgba(228, 238, 250, 0.12);
-}
-
-.panel.is-surface[data-section="contact"] .contact-links a {
-  padding: 9px 2px;
-  color: rgba(228, 238, 250, 0.86);
-}
-
-.panel.is-surface[data-section="contact"] .contact-links span:first-child {
-  color: rgba(228, 238, 250, 0.7);
-}
-
-.panel.is-surface[data-section="contact"] .letter-sign {
-  display: block;
-  margin: 16px 0 0;
-  font-family: var(--serif);
-  font-size: 26px;
-  font-style: italic;
-  color: #eef5ff;
-}
-
-.panel.is-surface[data-section="contact"] .terminal {
-  display: none;
-}
-
-/* the paper does not power on: it settles */
-.panel.is-surface[data-section="contact"] .screen-fx {
-  display: none;
-}
-
-.panel.is-surface[data-section="contact"].open {
-  animation: paperOpen 0.8s var(--ease) both;
-}
-
-@keyframes paperOpen {
-  from { opacity: 0; filter: brightness(0.86); }
-  to { opacity: 1; filter: none; }
-}
-
-/* dim the room further when the display is on */
-body.surface-open .scrim {
-  background: rgba(3, 2, 3, 0.36);
-  backdrop-filter: blur(2.5px) saturate(0.88);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .grain {
-    animation: none;
-  }
-}
+/* Contact uses the same sheet as every other section: one layout, no
+   letter paper, no second type system. */
 
 /* ==========================================================================
    The notebook reader + badge inspection
